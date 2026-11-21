@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>할 일 목록</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-100 flex items-start justify-center p-4 sm:p-8">
+
+  <!-- 카드 컨테이너 -->
+  <main class="w-full max-w-md bg-white rounded-2xl shadow-lg p-6">
+    <h1 class="text-2xl font-bold text-slate-800 mb-5">할 일 목록</h1>
+
+    <!-- 입력 영역 -->
+    <form id="todo-form" class="flex gap-2 mb-5">
+      <input
+        id="todo-input"
+        type="text"
+        placeholder="할 일을 입력하세요"
+        autocomplete="off"
+        class="flex-1 min-w-0 rounded-lg border border-slate-300 px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
+      <button
+        type="submit"
+        class="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white hover:bg-indigo-700 active:scale-95 transition"
+      >
+        추가
+      </button>
+    </form>
+
+    <!-- 할 일 목록 -->
+    <ul id="todo-list" class="space-y-2"></ul>
+
+    <!-- 빈 목록 안내 -->
+    <p id="empty-message" class="hidden text-center text-slate-400 py-6">
+      할 일이 없습니다. 위에서 새로 추가해 보세요.
+    </p>
+
+    <!-- 요약 -->
+    <p id="summary" class="mt-5 text-sm text-slate-500 text-right"></p>
+  </main>
+
+  <script>
+    const form = document.getElementById("todo-form");
+    const input = document.getElementById("todo-input");
+    const list = document.getElementById("todo-list");
+    const emptyMessage = document.getElementById("empty-message");
+    const summary = document.getElementById("summary");
+
+    const STORAGE_KEY = "todo-items";
+
+    // 저장된 할 일 불러오기 (저장소 접근이 막혀도 동작하도록 try/catch)
+    let todos = [];
+    try {
+      todos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch (error) {
+      todos = [];
+    }
+
+    function saveTodos() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+      } catch (error) {
+        // 저장에 실패해도 화면에서는 계속 사용할 수 있음
+      }
+    }
+
+    // 목록 전체를 다시 그리기
+    function render() {
+      list.innerHTML = "";
+
+      todos.forEach((todo) => {
+        const li = document.createElement("li");
+        li.className =
+          "flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 hover:bg-slate-50 transition";
+
+        // 체크박스
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = todo.done;
+        checkbox.className = "h-5 w-5 accent-indigo-600 cursor-pointer";
+        checkbox.addEventListener("change", () => {
+          todo.done = checkbox.checked;
+          saveTodos();
+          render();
+        });
+
+        // 할 일 텍스트 (textContent로 넣어 HTML이 실행되지 않도록 함)
+        const span = document.createElement("span");
+        span.textContent = todo.text;
+        span.className = todo.done
+          ? "flex-1 break-all text-slate-400 line-through"
+          : "flex-1 break-all text-slate-800";
+
+        // 삭제 버튼
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.textContent = "삭제";
+        deleteBtn.className =
+          "rounded-md px-2 py-1 text-sm text-red-500 hover:bg-red-50 hover:text-red-600 transition";
+        deleteBtn.addEventListener("click", () => {
+          todos = todos.filter((item) => item.id !== todo.id);
+          saveTodos();
+          render();
+        });
+
+        li.append(checkbox, span, deleteBtn);
+        list.appendChild(li);
+      });
+
+      // 빈 목록 안내 및 요약 갱신
+      emptyMessage.classList.toggle("hidden", todos.length > 0);
+      const doneCount = todos.filter((todo) => todo.done).length;
+      summary.textContent = `완료 ${doneCount} / 전체 ${todos.length}`;
+    }
+
+    // 추가 버튼 (Enter 키도 동일하게 동작)
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const text = input.value.trim();
+      if (text === "") {
+        input.focus();
+        return;
+      }
+
+      todos.push({
+        id: Date.now(),
+        text,
+        done: false,
+      });
+
+      input.value = "";
+      input.focus();
+      saveTodos();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

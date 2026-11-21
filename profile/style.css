@@ -1,0 +1,231 @@
+/* 색은 여기서만 정합니다. index.html의 tailwind.config가 이 변수들을 클래스 이름으로 연결합니다.
+   참고한 조합: 밝은 쿨그레이 반투명 패널 + 블루바이올렛 히어로 + 주황 버튼 + 라임 포인트 */
+:root {
+  --page: #e9ecf3;      /* 페이지 배경 (차가운 밝은 회색) */
+  --panel: #f3f5f9;     /* 반투명 패널 기본색 */
+  --ink: #1d2030;       /* 본문 글자 */
+  --muted: #6c7184;     /* 보조 글자 */
+  --line: #d3d7e2;      /* 밝은 영역 구분선 */
+  --navy: #262a4f;      /* 히어로·어두운 섹션 바탕 */
+  --violet: #5d64a8;    /* 히어로 그라데이션 밝은 쪽 */
+  --tile: #1b1d2b;      /* 아이콘 타일 (어두운 정사각형) */
+  --soft: #eef0f8;      /* 어두운 영역 글자 */
+  --accent: #f06414;    /* 주황 버튼 */
+  --accent-hi: #ff7d2e; /* 주황 버튼 hover */
+  --lime: #b4f02a;      /* 라임 포인트 (강조 단어, 아이콘) */
+
+  /* 카드 그림자: 넓게 퍼지는 부드러운 그림자 + 가까운 얕은 그림자 */
+  --shadow-card: 0 1px 2px rgba(29, 32, 48, 0.06), 0 12px 32px -8px rgba(29, 32, 48, 0.18);
+  --shadow-lift: 0 2px 4px rgba(29, 32, 48, 0.08), 0 24px 48px -12px rgba(29, 32, 48, 0.28);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- 공통: 반투명 패널 카드 ---------- */
+.panel {
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-card);
+}
+/* 패널 윗부분의 한 단계 밝은 영역 */
+.panel-top {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* 어두운 정사각형 아이콘 타일 */
+.tile {
+  background: linear-gradient(145deg, #2b2f45, var(--tile));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* 히어로·연락처 배경: 블루바이올렛 그라데이션 */
+.hero-bg {
+  background:
+    radial-gradient(1200px 600px at 80% 20%, color-mix(in srgb, var(--violet) 70%, transparent), transparent 70%),
+    linear-gradient(120deg, var(--navy) 0%, #3a4078 55%, var(--violet) 100%);
+}
+/* 이미지 위에 덮는 왼쪽 어둡게 그라데이션 (글자 가독성) */
+.hero-shade {
+  background: linear-gradient(90deg, rgba(30, 33, 66, 0.92) 0%, rgba(38, 42, 79, 0.7) 45%, rgba(38, 42, 79, 0.1) 100%);
+}
+
+/* ---------- 헤더 ---------- */
+#site-header .bar {
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+#site-header.scrolled .bar {
+  box-shadow: var(--shadow-lift);
+}
+
+/* 내비게이션 현재 섹션 표시 */
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease;
+}
+.nav-link:hover {
+  color: var(--accent);
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.nav-link.active::after {
+  transform: scaleX(1);
+}
+
+/* 주황 버튼 */
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(240, 100, 20, 0.7);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-accent:hover {
+  background: var(--accent-hi);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px -8px rgba(240, 100, 20, 0.8);
+}
+
+/* 모바일 메뉴 */
+#mobile-menu {
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+}
+#mobile-menu:not(.open) {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+}
+
+/* 헤드라인 줄바꿈 유지 */
+.headline {
+  white-space: pre-line;
+}
+
+/* 스크롤 등장 효과 */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- 능력 목록 (메뉴 행 스타일) ---------- */
+.ability-row {
+  transition: background-color 0.2s ease;
+}
+.ability-row:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+.ability-row[aria-pressed="true"] {
+  background: #fff;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.ability-row[aria-pressed="true"] .tile {
+  color: var(--lime);
+}
+
+/* 스킬 바 */
+.skill-fill {
+  width: 0;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hi));
+  transition: width 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 프로젝트 카드 */
+.project-card {
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lift);
+}
+.project-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.project-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* 버튼 화살표 */
+.cta-arrow {
+  transition: transform 0.3s ease;
+}
+.cta:hover .cta-arrow {
+  transform: translateX(4px);
+}
+
+/* 표창 장식 회전 */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin-slow 24s linear infinite;
+}
+
+/* 토스트 */
+#toast {
+  left: 50%;
+  transform: translate(-50%, 0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+#toast:not(.show) {
+  opacity: 0;
+  transform: translate(-50%, 12px);
+  pointer-events: none;
+}
+
+/* 움직임 줄이기 설정 존중 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .skill-fill,
+  .project-card,
+  .project-card::before,
+  .cta-arrow,
+  .btn-accent,
+  #toast,
+  #mobile-menu {
+    transition: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .spin-slow {
+    animation: none;
+  }
+}

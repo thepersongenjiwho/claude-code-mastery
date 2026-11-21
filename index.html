@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>홍길동 | 웹 개발자 이력서</title>
+  <meta name="description" content="홍길동의 웹 개발자 이력서. 경력, 기술 스택, 프로젝트를 확인할 수 있습니다." />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='14' font-size='14'%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E" />
+
+  <!-- 첫 화면을 그리기 전에 테마를 정해 깜빡임을 막습니다. 저장된 선택이 없으면 시스템 설정을 따릅니다. -->
+  <script>
+    (function () {
+      var saved = null;
+      try {
+        saved = localStorage.getItem("theme");
+      } catch (e) {}
+      var dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (dark) document.documentElement.classList.add("dark");
+    })();
+  </script>
+
+  <!-- 본문 글꼴: Pretendard. 불러오지 못하면 시스템 글꼴로 대체됩니다. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // 색 값은 style.css의 CSS 변수(라이트/다크/인쇄)에서 정하고, 여기서는 Tailwind 클래스 이름만 연결합니다.
+    // 예: bg-page, border-line, text-fg, text-muted, text-faint, bg-accent, text-accent-ink, border-accent/60
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: [
+              '"Pretendard Variable"',
+              "Pretendard",
+              "-apple-system",
+              "BlinkMacSystemFont",
+              "system-ui",
+              '"Apple SD Gothic Neo"',
+              '"Noto Sans KR"',
+              '"Malgun Gothic"',
+              '"Segoe UI"',
+              "sans-serif",
+            ],
+          },
+          colors: {
+            page: "rgb(var(--color-page) / <alpha-value>)",
+            subtle: "rgb(var(--color-subtle) / <alpha-value>)",
+            line: "rgb(var(--color-line) / <alpha-value>)",
+            fg: "rgb(var(--color-fg) / <alpha-value>)",
+            muted: "rgb(var(--color-muted) / <alpha-value>)",
+            faint: "rgb(var(--color-faint) / <alpha-value>)",
+            accent: {
+              DEFAULT: "rgb(var(--color-accent) / <alpha-value>)",
+              ink: "rgb(var(--color-accent-ink) / <alpha-value>)",
+              on: "rgb(var(--color-on-accent) / <alpha-value>)",
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="min-h-screen bg-page font-sans text-fg antialiased break-keep break-words">
+  <!--
+    레이아웃 규칙
+    - 가로 여백: px-5 → sm:px-8 → lg:px-12, 최대 폭 max-w-screen-2xl (모든 줄이 같은 값)
+    - 헤더: 2/3 · 1/3 격자를 얇은 강조색 선으로 나눔
+    - 섹션: 강조색 가로선으로 구분, 안쪽은 .resume-row (제목 1/3 · 내용 2/3)
+  -->
+  <header id="profile" class="relative">
+    <div class="mx-auto grid max-w-screen-2xl grid-cols-1 px-5 sm:px-8 md:grid-cols-3 lg:px-12 print:block print:px-0">
+      <!-- 1행 왼쪽: 로고 자리 (이름 첫 글자) -->
+      <div class="pt-6 sm:pt-8 md:col-span-2 md:border-r md:border-accent/60 md:pr-8 lg:pr-12 print:hidden">
+        <div id="profile-avatar" aria-hidden="true" class="grid h-10 w-10 select-none place-items-center bg-fg text-lg font-bold text-page"></div>
+      </div>
+
+      <!-- 1행 오른쪽: 테마 전환 (모바일에서는 오른쪽 위에 고정) -->
+      <div class="absolute right-5 top-6 sm:right-8 sm:top-8 md:static md:flex md:justify-end md:pl-8 md:pt-8 lg:pl-12 print:hidden">
+        <button
+          id="theme-toggle"
+          type="button"
+          aria-pressed="false"
+          class="inline-flex h-10 items-center gap-2 text-xs font-medium tracking-[0.08em] text-fg transition-colors hover:text-accent-ink motion-reduce:transition-none"
+        >
+          <!-- 라이트 모드에서는 달, 다크 모드에서는 해 아이콘 -->
+          <svg class="h-4 w-4 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <svg class="hidden h-4 w-4 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+          </svg>
+          <span>다크 모드</span>
+        </button>
+      </div>
+
+      <!-- 2행 왼쪽: 이름(검정)과 직무(강조색)를 큰 글자로 -->
+      <div class="pb-12 pt-20 md:col-span-2 md:border-r md:border-accent/60 md:pb-20 md:pr-8 md:pt-36 lg:pr-12 print:p-0">
+        <h1 id="profile-name" class="text-5xl font-normal leading-[0.95] tracking-[-0.04em] sm:text-7xl lg:text-8xl print:text-4xl"></h1>
+        <p id="profile-title" class="mt-2 text-5xl font-normal leading-[0.95] tracking-[-0.04em] text-accent sm:text-7xl lg:text-8xl print:mt-1 print:text-2xl"></p>
+      </div>
+
+      <!-- 2행 오른쪽: 한 줄 소개 (아래쪽 정렬) -->
+      <div class="flex items-end pb-12 md:pb-20 md:pl-8 lg:pl-12 print:mt-2 print:pb-0">
+        <p id="profile-intro" class="max-w-sm text-lg leading-relaxed text-muted print:max-w-none print:text-base"></p>
+      </div>
+    </div>
+
+    <!-- 아래 띠: 섹션 바로가기 · 연락처 블록 -->
+    <div class="border-t border-accent/60 print:border-0">
+      <div class="mx-auto grid max-w-screen-2xl grid-cols-1 px-5 sm:px-8 md:grid-cols-3 lg:px-12 print:block print:px-0">
+        <nav id="section-nav" aria-label="섹션 바로가기" class="flex items-end py-6 md:col-span-2 md:border-r md:border-accent/60 md:pr-8 lg:pr-12 print:hidden">
+          <ul class="meta-list flex flex-wrap gap-y-2 text-xs font-medium tracking-[0.08em]">
+            <li><a href="#about" class="transition-colors hover:text-accent-ink">소개</a></li>
+            <li><a href="#skills" class="transition-colors hover:text-accent-ink">기술 스택</a></li>
+            <li><a href="#experience" class="transition-colors hover:text-accent-ink">경력</a></li>
+            <li><a href="#projects" class="transition-colors hover:text-accent-ink">프로젝트</a></li>
+            <li><a href="#education" class="transition-colors hover:text-accent-ink">학력</a></li>
+            <li><a href="#social" class="transition-colors hover:text-accent-ink">SNS</a></li>
+          </ul>
+        </nav>
+        <div>
+          <!-- 강조색 연락처 블록. 화면 가장자리까지 채우려고 바깥 여백만큼 음수 margin을 줍니다. -->
+          <a id="profile-email" class="group -mx-5 block h-full bg-accent px-5 py-6 text-accent-on transition-colors duration-300 hover:bg-fg hover:text-page motion-reduce:transition-none sm:-mx-8 sm:px-8 md:-mr-8 md:ml-0 lg:-mr-12 lg:px-10 print:m-0 print:mt-2 print:bg-transparent print:p-0 print:text-fg"></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="about" aria-labelledby="about-title" class="border-t border-accent/60">
+      <div class="resume-row mx-auto max-w-screen-2xl px-5 py-14 sm:px-8 md:py-20 lg:px-12 print:px-0 print:py-3">
+        <h2 id="about-title" class="section-title text-3xl font-normal tracking-tight sm:text-4xl md:sticky md:top-8 md:self-start print:text-base print:font-semibold">소개</h2>
+        <p id="about-text" class="max-w-3xl text-2xl leading-snug tracking-tight text-fg sm:text-3xl print:text-base print:leading-relaxed"></p>
+      </div>
+    </section>
+
+    <section id="skills" aria-labelledby="skills-title" class="border-t border-accent/60">
+      <div class="resume-row mx-auto max-w-screen-2xl px-5 py-14 sm:px-8 md:py-20 lg:px-12 print:px-0 print:py-3">
+        <h2 id="skills-title" class="section-title text-3xl font-normal tracking-tight sm:text-4xl md:sticky md:top-8 md:self-start print:text-base print:font-semibold">기술 스택</h2>
+        <ul id="skills-list" class="slash-list flex flex-wrap gap-y-2 text-2xl tracking-tight sm:text-3xl print:text-base"></ul>
+      </div>
+    </section>
+
+    <section id="experience" aria-labelledby="experience-title" class="border-t border-accent/60">
+      <div class="resume-row mx-auto max-w-screen-2xl px-5 py-14 sm:px-8 md:py-20 lg:px-12 print:px-0 print:py-3">
+        <h2 id="experience-title" class="section-title text-3xl font-normal tracking-tight sm:text-4xl md:sticky md:top-8 md:self-start print:text-base print:font-semibold">경력</h2>
+        <div id="experience-list"></div>
+      </div>
+    </section>
+
+    <section id="projects" aria-labelledby="projects-title" class="border-t border-accent/60">
+      <div class="resume-row mx-auto max-w-screen-2xl px-5 py-14 sm:px-8 md:py-20 lg:px-12 print:px-0 print:py-3">
+        <h2 id="projects-title" class="section-title text-3xl font-normal tracking-tight sm:text-4xl md:sticky md:top-8 md:self-start print:text-base print:font-semibold">프로젝트</h2>
+        <div id="projects-list" class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 print:grid-cols-2 print:gap-2"></div>
+      </div>
+    </section>
+
+    <section id="education" aria-labelledby="education-title" class="border-t border-accent/60">
+      <div class="resume-row mx-auto max-w-screen-2xl px-5 py-14 sm:px-8 md:py-20 lg:px-12 print:px-0 print:py-3">
+        <h2 id="education-title" class="section-title text-3xl font-normal tracking-tight sm:text-4xl md:sticky md:top-8 md:self-start print:text-base print:font-semibold">학력</h2>
+        <div id="education-list"></div>
+      </div>
+    </section>
+
+    <section id="social" aria-labelledby="social-title" class="border-t border-accent/60">
+      <div class="resume-row mx-auto max-w-screen-2xl px-5 py-14 sm:px-8 md:py-20 lg:px-12 print:px-0 print:py-3">
+        <h2 id="social-title" class="section-title text-3xl font-normal tracking-tight sm:text-4xl md:sticky md:top-8 md:self-start print:text-base print:font-semibold">SNS</h2>
+        <ul id="social-list" class="grid grid-cols-1 border-t border-line sm:grid-cols-2 sm:gap-x-10 print:flex print:flex-wrap print:gap-x-5 print:border-0"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-accent/60">
+    <div class="mx-auto flex max-w-screen-2xl items-center justify-between gap-4 px-5 py-6 text-xs font-medium tracking-[0.08em] text-faint sm:px-8 lg:px-12 print:px-0 print:py-2">
+      <p id="footer-name"></p>
+      <a href="#profile" class="transition-colors hover:text-fg print:hidden">맨 위로 ↑</a>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

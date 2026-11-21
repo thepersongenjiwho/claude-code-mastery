@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>로그인</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <main class="card">
+    <h1>로그인</h1>
+    <p class="sub">계정에 로그인하세요</p>
+
+    <form id="login-form" novalidate>
+      <label for="email">이메일</label>
+      <input id="email" name="email" type="email" autocomplete="username" placeholder="you@example.com" required>
+      <p class="error" id="email-error" aria-live="polite"></p>
+
+      <label for="password">비밀번호</label>
+      <div class="pw-wrap">
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="8자 이상" required minlength="8">
+        <button type="button" id="toggle-pw" aria-label="비밀번호 표시">보기</button>
+      </div>
+      <p class="error" id="password-error" aria-live="polite"></p>
+
+      <div class="row">
+        <label class="check"><input type="checkbox" name="remember"> 로그인 상태 유지</label>
+        <a href="#">비밀번호 찾기</a>
+      </div>
+
+      <button type="submit" class="primary">로그인</button>
+      <p class="status" id="status" aria-live="polite"></p>
+    </form>
+
+    <p class="foot">계정이 없으신가요? <a href="#">회원가입</a></p>
+  </main>
+  <script src="login.js"></script>
+</body>
+</html>
